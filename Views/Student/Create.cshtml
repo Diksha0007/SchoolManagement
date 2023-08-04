@@ -1,0 +1,142 @@
+﻿@model SchoolManagement1.Models.Student
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Registation Page</h1>
+
+<h4>Student</h4>
+<hr />
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FName" class="control-label"></label>
+                <input asp-for="FName" class="form-control" />
+                <span asp-validation-for="FName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LName" class="control-label"></label>
+                <input asp-for="LName" class="form-control" />
+                <span asp-validation-for="LName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <h4><label asp-for="Gender" class="control-label"></label></h4></br>
+                <label for="Gender">Gender</label>
+                <br />
+                <input type="radio" class="radio" id="male" name="Gender" value="Male" />
+                <label for="male">Male</label><br />
+                <input type="radio" id="female" name="Gender" value="Female" />
+                <label for="female">Female</label><br />
+                <input type="radio" id="other" name="Gender" value="Other" />
+                <label for="other">Other</label><br />
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <h4><label asp-for="Hobbies" class="control-label"></label></h4></br>
+                <input type="checkbox" name="Hobbies" id="checkbox1" value="Dance" class="form-check-input">
+                <label for="checkbox1">Dance</label><br>
+                <input type="checkbox" name="Hobbies" id="checkbox2" value="Singing" class="form-check-input">
+                <label for="checkbox2">Singing</label><br>
+                <input type="checkbox" name="Hobbies" id="checkbox2" value="Actor" class="form-check-input">
+                <label for="checkbox2">Actor</label><br>
+                <input type="checkbox" name="Hobbies" id="checkbox2" value="Writing" class="form-check-input">
+                <label for="checkbox2">Writing</label><br>
+                <input type="checkbox" name="Hobbies" id="checkbox2" value="Cooking" class="form-check-input">
+                <label for="checkbox2">Cooking</label><br>
+                <span asp-validation-for="Hobbies" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="CourseId" class="control-label"></label>
+                    <select asp-for="CourseId" asp-items="ViewBag.CourseList">
+                        <option value="">Select a Course</option>
+                        <option value="B.tech">B.tech</option>
+                        <option value="MBA">MBA</option>
+                        <option value="BCA">BCA</option>
+                        <option value="MCA">MCA</option>
+                    </select>
+                    
+                  <span asp-validation-for="CourseId" class="text-danger"></span>
+                </div>
+                    
+
+
+                
+               
+                <script>
+                    $(document).ready(function () {
+                        $("#submitBtn").click(function () {
+                            const fName = $("#FName").val();
+                            const lName = $("#LName").val();
+                            const email = $("#Email").val();
+                            const phone = $("#Phone").val();
+                            const address = $("#Address").val();
+                            const gender = $('input[name="Gender"]:checked').val();
+
+                            let hobbies = [];
+                            $(".form-check-input:checked").each(function () {
+                                hobbies.push($(this).val());
+                                const course = $('input[name="CourseId"]:selected').val();
+                            });
+
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("POST", "/My/SubmitHobbiesData");
+                            xhr.setRequestHeader("Content-Type", "application/json");
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    console.log("Data submitted successfully!");
+                                } else {
+                                    console.error("Error submitting data:", xhr.statusText);
+                                }
+                            };
+                            xhr.send(JSON.stringify({
+                                FName: fName,
+                                LName: lName,
+                                Email: email,
+                                Phone: phone,
+                                Address: address,
+                                Gender: gender,
+                                Hobbies: hobbies
+                               CourseId: course
+                            }));
+                        });
+                    });
+                </script>
+
+            </div>
+            <div class="form-group">
+                <button id="submitBtn">Submit</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   
+}
+
